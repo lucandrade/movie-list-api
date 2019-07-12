@@ -1,3 +1,4 @@
 <?php
 
-Route::get('/', 'SearchController@handle');
+Route::get('/', 'ListPopularController@handle');
+Route::get('/search', 'SearchController@handle');

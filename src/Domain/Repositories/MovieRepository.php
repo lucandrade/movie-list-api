@@ -9,4 +9,5 @@ use MovieList\Domain\ValueObjects\Page;
 interface MovieRepository
 {
     public function search(Options $options): Page;
+    public function listPopular(Options $options): Page;
 }
