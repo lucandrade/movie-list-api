@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace MovieList\Infra\Http\Repositories;
+namespace MovieList\Infra\Repositories;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;

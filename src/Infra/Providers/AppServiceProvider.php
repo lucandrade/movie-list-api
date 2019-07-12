@@ -6,7 +6,7 @@ use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
 use MovieList\Domain\Repositories\MovieRepository;
 use MovieList\Infra\Factories\MovieFactory;
-use MovieList\Infra\Http\Repositories\ApiMovieRepository;
+use MovieList\Infra\Repositories\ApiMovieRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
