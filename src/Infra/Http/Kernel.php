@@ -3,6 +3,7 @@
 namespace MovieList\Infra\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use MovieList\Infra\Http\Middleware\Cors;
 
 class Kernel extends HttpKernel
 {
@@ -19,6 +20,7 @@ class Kernel extends HttpKernel
         \MovieList\Infra\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \MovieList\Infra\Http\Middleware\TrustProxies::class,
+        Cors::class,
     ];
 
     /**
