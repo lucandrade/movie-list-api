@@ -10,12 +10,7 @@ use MovieList\Infra\Http\Repositories\ApiMovieRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
+    public function register(): void
     {
         $this->app->bind(MovieRepository::class, function () {
             return new ApiMovieRepository(
@@ -25,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
                         'api_key' => env('API_KEY'),
                     ],
                 ]),
-                new MovieFactory
+                new MovieFactory(env('API_IMAGE_URL'))
             );
         });
     }
