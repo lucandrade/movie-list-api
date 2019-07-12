@@ -19,7 +19,7 @@ final class Movie implements Arrayable
     /** @var ?string */
     private $image;
 
-    public function __construct(string $id, string $title, string $year, string $image)
+    public function __construct(string $id, string $title, string $year, ?string $image)
     {
         $this->id = $id;
         $this->title = $title;
