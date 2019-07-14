@@ -8,7 +8,7 @@ use MovieList\Domain\Contracts\Arrayable;
 final class MovieDetails implements Arrayable
 {
     /** @var string */
-    private $movieId;
+    private $id;
 
     /** @var string */
     private $title;
@@ -35,7 +35,7 @@ final class MovieDetails implements Arrayable
     private $reviewList;
 
     public function __construct(
-        string $movieId,
+        string $id,
         string $title,
         string $year,
         ?string $image,
@@ -45,7 +45,7 @@ final class MovieDetails implements Arrayable
         array $trailerList,
         array $reviewList
     ) {
-        $this->movieId = $movieId;
+        $this->id = $id;
         $this->title = $title;
         $this->year = $year;
         $this->image = $image;
@@ -59,6 +59,7 @@ final class MovieDetails implements Arrayable
     public function toArray(): array
     {
         return [
+            'id' => $this->id,
             'title' => $this->title,
             'year' => $this->year,
             'image' => $this->image,
