@@ -5,6 +5,7 @@ namespace MovieList\Infra\Repositories;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use MovieList\Domain\Entities\MovieDetails;
 use MovieList\Domain\Exceptions\RuntimeException;
 use MovieList\Domain\Repositories\MovieRepository;
 use MovieList\Domain\ValueObjects\Options;
@@ -26,7 +27,7 @@ final class ApiMovieRepository implements MovieRepository
         $this->factory = $factory;
     }
 
-    private function buildQuery(array $query): array
+    private function buildQuery(array $query = []): array
     {
         return [
             'query' => array_merge(
@@ -57,7 +58,7 @@ final class ApiMovieRepository implements MovieRepository
             }
 
             return new Page($options, intval($totalItems), array_map(function (array $item) {
-                return $this->factory->fromApiResult($item);
+                return $this->factory->build($item);
             }, $items));
         } catch (RequestException $e) {
             throw new RuntimeException($e->getMessage(), intval($e->getCode()), $e);
@@ -84,10 +85,84 @@ final class ApiMovieRepository implements MovieRepository
             }
 
             return new Page($options, intval($totalItems), array_map(function (array $item) {
-                return $this->factory->fromApiResult($item);
+                return $this->factory->build($item);
             }, $items));
         } catch (RequestException $e) {
             throw new RuntimeException($e->getMessage(), intval($e->getCode()), $e);
         }
+    }
+
+    private function getTrailerList(string $movieId): array
+    {
+        try {
+            $response = $this->client->get("/3/movie/{$movieId}/videos", $this->buildQuery());
+
+            if ($response->getStatusCode() !== StatusCode::OK) {
+                return [];
+            }
+
+            $body = json_decode($response->getBody()->getContents(), true);
+            $items = array_get($body, 'results');
+
+            if (!is_array($items)) {
+                return [];
+            }
+
+            return $items;
+        } catch (RequestException $e) {
+            return [];
+        }
+    }
+
+    private function getReviewList(string $movieId): array
+    {
+        try {
+            $response = $this->client->get("/3/movie/{$movieId}/reviews", $this->buildQuery());
+
+            if ($response->getStatusCode() !== StatusCode::OK) {
+                return [];
+            }
+
+            $body = json_decode($response->getBody()->getContents(), true);
+            $items = array_get($body, 'results');
+
+            if (!is_array($items)) {
+                return [];
+            }
+
+            return $items;
+        } catch (RequestException $e) {
+            return [];
+        }
+    }
+
+    public function get(string $movieId): ?MovieDetails
+    {
+        try {
+            $response = $this->client->get("/3/movie/{$movieId}", $this->buildQuery());
+
+            if ($response->getStatusCode() !== StatusCode::OK) {
+                return null;
+            }
+
+            $body = json_decode($response->getBody()->getContents(), true);
+            $movieDetailsData = array_merge(
+                $body,
+                [
+                    'trailers' => $this->getTrailerList($movieId),
+                ],
+                [
+                    'reviews' => $this->getReviewList($movieId),
+                ]
+            );
+
+//            dd($movieDetailsData);
+
+            return $this->factory->buildDetails($movieDetailsData);
+        } catch (RequestException $e) {
+            throw new RuntimeException($e->getMessage(), intval($e->getCode()), $e);
+        }
+
+        return null;
     }
 }
