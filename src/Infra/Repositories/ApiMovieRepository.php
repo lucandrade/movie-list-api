@@ -29,11 +29,17 @@ final class ApiMovieRepository implements MovieRepository
 
     private function buildQuery(array $query = []): array
     {
+        if (is_array($this->client->getConfig('query'))) {
+            return [
+                'query' => array_merge(
+                    $this->client->getConfig('query'),
+                    $query
+                ),
+            ];
+        }
+
         return [
-            'query' => array_merge(
-                $this->client->getConfig('query'),
-                $query
-            ),
+            'query' => $query,
         ];
     }
 
