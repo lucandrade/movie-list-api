@@ -12,4 +12,5 @@ interface MovieRepository
     public function search(Options $options): Page;
     public function listPopular(Options $options): Page;
     public function get(string $movieId): ?MovieDetails;
+    public function listSimilar(string $movieId): Page;
 }
