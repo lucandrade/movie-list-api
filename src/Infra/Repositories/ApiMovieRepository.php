@@ -187,7 +187,7 @@ final class ApiMovieRepository implements MovieRepository
 
             return new Page(Options::default(), intval($totalItems), array_map(function (array $item) {
                 return $this->factory->build($item);
-            }, $items));
+            }, array_slice($items, 0, 5)));
         } catch (RequestException $e) {
             throw new RuntimeException($e->getMessage(), intval($e->getCode()), $e);
         }
