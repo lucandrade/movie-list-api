@@ -39,7 +39,7 @@ final class MovieDetails implements Arrayable
         string $title,
         string $year,
         ?string $image,
-        string $link,
+        ?string $link,
         string $description,
         array $genreList,
         array $trailerList,
